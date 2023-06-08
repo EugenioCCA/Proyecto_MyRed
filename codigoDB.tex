@@ -1,0 +1,50 @@
+\begin{lstlisting}[language=Sql, basicstyle=\footnotesize\ttfamily, numbers=left]
+\begin{verbatim}
+CREATE DATABASE MyRedDB;
+
+USE MyRedDB;
+
+CREATE TABLE USUARIOS (
+    idUsuario INT NOT NULL PRIMARY KEY,
+    Nombre VARCHAR(45) NOT NULL,
+    Apellido VARCHAR(45) NOT NULL,
+    Usuario VARCHAR(45) NOT NULL UNIQUE,
+    Contraseña VARCHAR(45) NOT NULL UNIQUE
+);
+
+Use MyRedDB; 
+CREATE TABLE PUEBLOS (
+    idPueblo INT NOT NULL PRIMARY KEY,
+    Nombre_pueblo VARCHAR(60) NOT NULL
+);
+
+Use MyRedDB; 
+CREATE TABLE CONTRATOS (
+    idContrato INT NOT NULL PRIMARY KEY,
+    Fecha_inicio DATE NOT NULL,
+    Fecha_corte DATE NOT NULL,
+    Cantidad_pago DECIMAL(19,4) NOT NULL,
+    Fecha_ultimo_pago DATE NOT NULL,
+    idUsuario INT,
+    idPueblo INT,
+    idDatosRed INT, 
+    FOREIGN KEY (idUsuario) REFERENCES USUARIOS(idUsuario),
+    FOREIGN KEY (idPueblo) REFERENCES PUEBLOS(idPueblo),
+    FOREIGN KEY (idDatosRed) REFERENCES DETALLES_CONTRATOS_RED(idDetalles)
+);
+
+
+Use MyRedDB; 
+CREATE TABLE DETALLES_CONTRATOS_RED (
+    idDetalles INT NOT NULL PRIMARY KEY,
+    Nombre_antena VARCHAR(45) NOT NULL,
+    Direccion_ip VARCHAR(25) NOT NULL UNIQUE,
+    Clave_modem VARCHAR(45) NOT NULL,
+    idContrato INT,
+    FOREIGN KEY (idContrato) REFERENCES CONTRATOS(idContrato)
+);
+
+
+
+\end{verbatim}
+\end{lstlisting}

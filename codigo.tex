@@ -1,0 +1,470 @@
+
+
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily, numbers=left]
+\section{Código Fuente}
+\begin{verbatim}
+// --------------Login ---------------//
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="estilos_login.css">
+</head>
+<body>
+    <div class="header">
+        <span class="header-text">@MyRed. Eugenio Cortes</span>
+        <img src="logo.png" alt="Logo" class="logo">
+    </div>
+
+    <div class="login-container">
+        <h1>Iniciar Sesion</h1>
+        <form action="validar_login.php" method="post">
+            <input type="text" id="username" name="username" placeholder="Usuario" 
+            required>
+            <input type="password" id="password" name="password" 
+            placeholder="Contrasena" required>
+            <input type="submit" value="Iniciar Sesion">
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+//estilos
+body {
+    background: linear-gradient(to bottom right, #000000, #2e2626);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    position: absolute;
+    top: 850px; 
+    right: 20px;
+    color: rgb(105, 104, 104); 
+    display: flex; 
+    align-items: center; 
+}
+
+.logo {
+    height: 35px;
+    margin-right: 0px;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    box-shadow: 40px 40px 20px rgba(0, 0, 0, 0.5);
+    padding: 45px;
+    text-align: center;
+    width: 300px;
+}
+
+.login-container h1 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.login-container input {
+    border: none;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    outline: none;
+    padding: 10px;
+    width: 100%;
+}
+
+.login-container input[type="submit"] {
+    background: linear-gradient(to right, #434343, #000000);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.login-container input[type="submit"]:hover {
+    background: linear-gradient(to right, #000000, #434343);
+}
+
+.bad{
+    position: absolute; 
+    top: 850px; 
+    right: inherit;
+    color: red;
+
+}
+
+//validación
+<?php
+// Datos de formulario
+$clave = $_POST['username']; 
+$contraseña = $_POST['password'];
+
+// Iniciar sesión
+session_start(); 
+$_SESSION['clave'] = $clave;
+
+// Conexión
+$conn = new mysqli("localhost", "root", "", "MyRed");
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Preparar consulta
+$stmt = $conn->prepare("SELECT * FROM login WHERE usuario = ? AND contraseña = ?");
+$stmt->bind_param("ss", $clave, $contraseña);
+
+// Ejecutar consulta
+$stmt->execute();
+
+// Obtener resultados
+$resultado = $stmt->get_result();
+$filas = $resultado->num_rows;
+
+// Verificar resultado
+if ($filas) {
+    header("location: formulario.html"); 
+} else {
+    echo "<script type='text/javascript'>alert
+    ('Usuario o contraseña son incorrectos'); 
+    window.location='login.html';</script>";
+}
+
+$resultado->free();
+$conn->close();
+
+?>
+
+
+//---------------------Pagina Inicio --------------//
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyRed</title>
+    <link rel="stylesheet" href="estilos_formulario.css">
+    <link rel="stylesheet" href="estiloFRegistro.css">
+    <link rel="stylesheet" href="modoOscuro.css">
+    <link href="https:
+    //fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" 
+    rel="stylesheet">
+    <link href=
+    'https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+
+    
+    <style>
+        .view-registro,
+        .view-lista-clientes {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="view1">
+        <nav>
+            <p>MyRed</p>
+            <ul>
+                <li onclick="mostrarPantallaInicio()">INICIO</li>
+                <li onclick="mostrarPantallaRegistro()">REGISTRO</li>
+                <li onclick="mostrarPantallaListaClientes()">LISTA DE CLIENTES</li>
+                <li>
+                    <button class="switchDark active" id="switch">
+                        <span><i class='bx bx-sun'></i></span>
+                        <span><i class='bx bx-moon'></i></span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <header>
+            <h1>BIENVENIDO A LA RED</h1>
+        </header>
+        <img class="logored" src="icono_red.svg" alt="">
+    </div>
+
+    <div class="view-registro">
+        <nav>
+            <p>MyRed</p>
+            <ul>
+                <li onclick="mostrarPantallaInicio()">INICIO</li>
+                <li onclick="mostrarPantallaRegistro()">REGISTRO</li>
+                <li onclick="mostrarPantallaListaClientes()">LISTA DE CLIENTES</li>
+                <li>
+                    <button class="switchDark active" id="switch">
+                        <span><i class='bx bx-sun'></i></span>
+                        <span><i class='bx bx-moon'></i></span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <section class="formulario-registro">
+            <h4>Registro de clientes</h4>
+            <form action="registro.php" method="post" class="formulario-registro">
+                <input class="controls" type="text" name="nombres" id="nombres" 
+                placeholder="Ingrese su Nombre" required>
+                <input class="controls" type="text" name="apellidos" id="apellidos" 
+                placeholder="Ingrese su Apellido" required>
+                <input class="controls" type="text" name="poblacion" id="poblacion" 
+                placeholder="Ingrese el nombre de la poblacion" required>
+                <input class="controls" type="text" name="antena" id="antena" 
+                placeholder="Ingrese el nombre de la antena" required>
+                <input 
+                class="controls" type="text" name="direccionIp" id="direccionIp" 
+                placeholder="Ingrese la direccion IP" required>
+                <input class="controls" type="date" name="fecha" id="fecha" 
+                placeholder="Ingrese la fecha de registro" required>
+                <input class="controls" type="number" name="pago" id="pago" 
+                placeholder="Ingrese el monto a pagar" required>
+                <input 
+                class="controls" type="password" name="contraseña" id="contraseña" 
+                placeholder="Ingrese la contraseña del modem" required>
+                <input class="botons" type="submit" value="Registrar">
+          </form>
+        </section>
+
+    </div>
+
+    <div class="view-lista-clientes">
+        
+        <nav>
+            <p>MyRed</p>
+            <ul>
+                <li onclick="mostrarPantallaInicio()">INICIO</li>
+                <li onclick="mostrarPantallaRegistro()">REGISTRO</li>
+                <li onclick="mostrarPantallaListaClientes()">LISTA DE CLIENTES</li>
+                <li>
+                    <button class="switchDark active" id="switch">
+                        <span><i class='bx bx-sun'></i></span>
+                        <span><i class='bx bx-moon'></i></span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <div id="datos-registro"></div>
+        <script>
+            $(document).ready(function(){
+                $.get("showRegistro.php", function(data, status){
+                    $("#datos-registro").html(data);
+                });
+            });
+            </script>
+        
+    </div>
+    <script src="funciones.js"></script>
+</body>
+</html>
+
+//estilos
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto',sans-serif;
+}
+.view1{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-width: 1300px;
+}
+.logored{
+    position: absolute;
+    width: 800px;
+    height: 600px;
+    right: 0px;
+    transform: translateY(20px);
+}
+
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+nav p{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 40px;
+    text-decoration: underline;
+}
+nav > p,header{
+    margin-left: 40px;
+}
+li{
+    font-size: 18px;
+    display: inline-block;
+    padding: 0 25px;
+    cursor: pointer;
+    transition: 0.4s ease 0s;
+    font-weight: 500;
+}
+li:hover{
+    color: rgba(0, 153, 255,1);
+}
+header{
+    position: absolute;
+    width: 400px;
+    top: 35%;
+}
+h1{
+    line-height: 75px;
+    font-weight: 500;
+    font-size: 64px;
+    font-style: normal;
+}
+header p{
+    width: 757px;
+    height: 70px;
+    font-size: 18px;
+    font-style: normal;
+    line-height: 21px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+header button{
+    background-color:rgba(0, 153, 255,1) ;
+    width: 150px;
+    height: 40px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 28px;
+    font-style: normal;
+    color: #fff;
+    transition: 0.4s ease 0s;
+}
+header button:hover{
+    box-shadow: 1px 1px 7px #333;
+}
+
+//Registro
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "MyRed";
+
+// Crear la conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if ($conn->connect_error) {
+  die("Conexión fallida: " . $conn->connect_error);
+}
+$direccionIp = isset($_POST['direccionIp']) ? $_POST['direccionIp'] : '';
+
+
+$nombres = $_POST['nombres'];
+$apellidos = $_POST['apellidos'];
+$poblacion = $_POST['poblacion'];
+$antena = $_POST['antena'];
+$fecha = $_POST['fecha'];
+$pago = $_POST['pago'];
+$contraseña = password_hash($_POST['contraseña'], PASSWORD_DEFAULT);
+
+$stmt = $conn->prepare("INSERT INTO datosusuario 
+(nombre, apellido, poblacion, antena, direccionIp, fechaInicio, montoPagar, contraseña) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param
+("sssssdss", $nombres, $apellidos, $poblacion, $antena, $direccionIp, $fecha, $pago, $contraseña);
+$stmt->execute();
+
+
+
+echo "<script type='text/javascript'>alert('Registro correcto'); 
+window.location='formulario.html';</script>";
+
+$stmt->close();
+$conn->close();
+?>
+
+//busqueda
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "MyRed";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+  die("Conexión fallida: " . $conn->connect_error);
+}
+
+$query = "SELECT * FROM datosusuario";
+$result = $conn->query($query);
+
+if ($result->num_rows > 0) {
+  
+  while ($row = $result->fetch_assoc()) {
+    echo "ID: " . $row["idUsuario"] . "<br>";
+    echo "Nombre: " . $row["nombre"] . "<br>";
+    echo "Apellido: " . $row["apellido"] . "<br>";
+    echo "Poblacion: ". $row["poblacion"]. "<br>"; 
+    echo "Nombre de la antena:". $row["antena"]. "<br>"; 
+    echo "Direccion ip: ". $row["direccionIp"]. "<br>";
+    echo "Fecha de inico de contrato:". $row["fechaInicio"]. "<br>";
+    echo "Monto de mensualidad : ". $row["montoPagar"]. "<br>";
+    echo "Contraseña de su modem: ". $row["contraseña"]. "<br>";
+    echo "<br>";
+  }
+} else {
+  echo "No se encontraron registros.";
+}
+
+$conn->close();
+?>
+
+//funncionalidades
+
+const switchButton = document.getElementById('switch');
+switchButton.addEventListener('click',()=>{
+    document.body.classList.toggle('dark');
+    switchButton.classList.toggle('active')
+})
+
+
+const inicioElement = document.querySelector("li:nth-child(1)");
+const registroElement = document.querySelector("li:nth-child(2)");
+const listaClientesElement = document.querySelector("li:nth-child(3)");
+const pantallaInicio = document.querySelector(".view1");
+const pantallaRegistro = document.querySelector(".view-registro");
+const pantallaListaClientes = document.querySelector(".view-lista-clientes");
+
+// Asignar eventos a los elementos
+inicioElement.addEventListener("click", mostrarPantallaInicio);
+registroElement.addEventListener("click", mostrarPantallaRegistro);
+listaClientesElement.addEventListener("click", mostrarPantallaListaClientes);
+
+// Funciones para mostrar/ocultar pantallas
+function mostrarPantallaInicio() {
+  pantallaInicio.style.display = "block";
+  pantallaRegistro.style.display = "none";
+  pantallaListaClientes.style.display = "none";
+}
+
+function mostrarPantallaRegistro() {
+  pantallaInicio.style.display = "none";
+  pantallaRegistro.style.display = "block";
+  pantallaListaClientes.style.display = "none";
+}
+
+function mostrarPantallaListaClientes() {
+  pantallaInicio.style.display = "none";
+  pantallaRegistro.style.display = "none";
+  pantallaListaClientes.style.display = "block";
+}
+\end{verbatim}
+\end{lstlisting}
+
